@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>متجرنا — سوبر ماركت</title>
+  <meta name="description" content="سوبر ماركت متكامل — أقسام، سلة مشتريات، خصومات، جديد، وإرسال الطلب عبر تيلجرام أو واتساب" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#0f172a;          /* slate-900 */
+      --panel:#111827cc;     /* slate-900/80 */
+      --card:#0b1226;        /* custom deep */
+      --muted:#94a3b8;       /* slate-400 */
+      --text:#e2e8f0;        /* slate-200 */
+      --brand:#22c55e;       /* green-500 */
+      --brand-2:#06b6d4;     /* cyan-500 */
+      --danger:#ef4444;      /* red-500 */
+      --warn:#f59e0b;        /* amber-500 */
+      --ok:#10b981;          /* emerald-500 */
+      --ring: #334155;       /* ring color */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 20px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:"Cairo", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 800px at 70% -20%, #1f2937 0%, var(--bg) 45%), linear-gradient(180deg, #0b1020 0%, #090e1a 100%);
+      color:var(--text);
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:0 16px}
+
+    /* Header */
+    header{
+      position:sticky; top:0; z-index:30; backdrop-filter: blur(10px);
+      background:linear-gradient(180deg, #0b1020cc, #0b102000);
+      border-bottom:1px solid #0b1226;
+    }
+    .nav{display:flex; align-items:center; gap:14px; padding:14px 0}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:900; letter-spacing:.5px}
+    .brand .logo{width:40px; height:40px; border-radius:12px; background:conic-gradient(from 120deg, var(--brand), var(--brand-2)); display:grid; place-items:center; box-shadow: var(--shadow)}
+    .brand .logo span{font-weight:900; color:#001b12}
+    .nav .grow{flex:1}
+    .nav-links{display:flex; flex-wrap:wrap; gap:10px}
+    .nav-links a, .chip{padding:10px 14px; background:#0b1226; border:1px solid #0f1b36; border-radius:14px; font-weight:700; color:#cbd5e1}
+    .nav-links a:hover{border-color:var(--ring)}
+
+    /* Hero */
+    .hero{padding:40px 0 10px}
+    .hero-card{display:grid; grid-template-columns:1.2fr .8fr; gap:20px; background:linear-gradient(135deg, #0b1226, #0f1b36); border:1px solid #0f1b36; border-radius:var(--radius); padding:24px; box-shadow:var(--shadow)}
+    .hero h1{margin:0 0 8px; font-size:36px}
+    .hero p{margin:0; color:var(--muted)}
+    .hero .actions{margin-top:16px; display:flex; gap:10px; flex-wrap:wrap}
+    .btn{display:inline-flex; align-items:center; gap:8px; padding:10px 16px; background:var(--brand); border:none; border-radius:14px; color:#00130b; font-weight:800; cursor:pointer}
+    .btn.alt{background:#0b1226; color:#cbd5e1; border:1px solid #14305f}
+    .btn.warn{background:var(--warn); color:#1b1100}
+
+    /* Controls */
+    .controls{margin:26px 0; display:flex; gap:10px; flex-wrap:wrap}
+    .input, select{padding:12px 14px; border-radius:12px; background:#0b1226; border:1px solid #14305f; color:var(--text)}
+    .input:focus, select:focus{outline:none; border-color:var(--ring)}
+
+    /* Grid */
+    .grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:16px}
+    @media (max-width: 1100px){ .grid{grid-template-columns:repeat(3, 1fr)} }
+    @media (max-width: 800px){ .grid{grid-template-columns:repeat(2, 1fr)} .hero-card{grid-template-columns:1fr} }
+    @media (max-width: 520px){ .grid{grid-template-columns:1fr} }
+
+    .card{position:relative; background:linear-gradient(180deg, #0b1226, #0b1226); border:1px solid #0f1b36; border-radius:18px; overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column}
+    .card img{width:100%; height:170px; object-fit:cover; background:#0a0f1d}
+    .card-body{padding:12px 14px; display:flex; flex-direction:column; gap:8px}
+    .title{font-weight:800; font-size:18px}
+    .desc{color:#93a1b6; font-size:14px; min-height:40px}
+    .price{display:flex; align-items:center; gap:8px; font-weight:900}
+    .old{color:#94a3b8; text-decoration:line-through}
+    .badge{position:absolute; right:10px; top:10px; background:var(--brand-2); color:#00131a; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:900}
+    .badge.sale{background:linear-gradient(90deg, var(--warn), var(--brand))}
+    .badge.new{background:linear-gradient(90deg, #60a5fa, #22d3ee)}
+
+    .card-actions{display:flex; gap:8px; margin-top:auto}
+    .qty{display:flex; align-items:center; gap:8px}
+    .qty button{width:30px; height:30px; border-radius:10px; border:1px solid #14305f; background:#0b1226; color:#cbd5e1; font-weight:900; cursor:pointer}
+
+    /* Sections */
+    section{margin:40px 0}
+    h2{margin:0 0 14px; font-size:26px}
+
+    /* Cart panel */
+    .cart-toggle{position:fixed; bottom:18px; left:18px; z-index:50}
+    .fab{border-radius:999px; width:56px; height:56px; display:grid; place-items:center; background:var(--brand); color:#002012; font-weight:900; box-shadow:var(--shadow); border:none; cursor:pointer}
+
+    .drawer{position:fixed; inset:0; display:none; z-index:60}
+    .drawer.show{display:block}
+    .drawer .backdrop{position:absolute; inset:0; background:#0008}
+    .drawer .panel{position:absolute; top:0; bottom:0; right:0; width:420px; max-width:100%; background:#0b1226; border-left:1px solid #14305f; padding:16px; display:flex; flex-direction:column; gap:10px}
+    .cart-row{display:grid; grid-template-columns:60px 1fr auto; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid #0f1b36}
+    .cart-row img{width:60px; height:60px; object-fit:cover; border-radius:10px}
+    .cart-row .name{font-weight:800}
+    .cart-row .ctrls{display:flex; align-items:center; gap:8px}
+    .cart-summary{margin-top:auto; padding-top:10px; border-top:2px dashed #17315f}
+    .checkout{display:grid; gap:8px}
+
+    .pill{padding:8px 10px; border-radius:999px; background:#0f1b36; display:inline-flex; align-items:center; gap:6px}
+
+    /* Footer */
+    footer{margin-top:60px; padding:24px 0; border-top:1px solid #0f1b36; color:#93a1b6}
+
+    /* Toast */
+    .toast{position:fixed; top:16px; right:16px; background:#0b1226; color:#cbd5e1; border:1px solid #14305f; border-radius:12px; padding:10px 14px; box-shadow:var(--shadow); display:none; z-index:100}
+    .toast.show{display:block}
+
+    /* Tabs / chips */
+    .chips{display:flex; gap:8px; flex-wrap:wrap}
+    .chip.active{outline:2px solid var(--brand)}
+
+    /* Language switch */
+    .lang{margin-left:auto}
+
+    /* About/Contact */
+    .about, .contact{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    @media (max-width: 900px){ .about,.contact{grid-template-columns:1fr} }
+    iframe.map{width:100%; height:260px; border:0; border-radius:16px}
+
+    /* Loyalty */
+    .loyalty{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+    @media (max-width: 900px){ .loyalty{grid-template-columns:1fr} }
+    .tier{background:#0b1226; border:1px solid #14305f; border-radius:16px; padding:16px}
+    .tier h3{margin:0 0 6px}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <div class="logo"><span>🛒</span></div>
+        <div>
+          <div style="font-weight:900">متجرنا</div>
+          <small style="color:var(--muted)">سوبر ماركت</small>
+        </div>
+      </div>
+      <div class="grow"></div>
+      <nav class="nav-links">
+        <a href="#catalog" data-i18n="nav.catalog">المنتجات</a>
+        <a href="#offers" data-i18n="nav.offers">العروض</a>
+        <a href="#bests" data-i18n="nav.bests">الأكثر مبيعاً</a>
+        <a href="#new" data-i18n="nav.new">الجديد</a>
+        <a href="#loyalty" data-i18n="nav.loyalty">الولاء</a>
+        <a href="#about" data-i18n="nav.about">من نحن</a>
+        <a href="#contact" data-i18n="nav.contact">اتصل بنا</a>
+      </nav>
+      <div class="lang">
+        <button class="btn alt" id="langBtn">EN</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-card">
+        <div>
+          <h1 data-i18n="hero.title">أهلاً بيك بسوبر ماركت متجرنا</h1>
+          <p data-i18n="hero.subtitle">تسوق أقسامنا المتنوعة، أضف للسلة، وارسِل طلبك مباشرة عبر تيلجرام أو واتساب.</p>
+          <div class="actions">
+            <a class="btn" href="#catalog" data-i18n="hero.shopNow">ابدأ التسوق</a>
+            <a class="btn alt" href="#offers" data-i18n="hero.viewOffers">شوف العروض</a>
+          </div>
+          <div style="margin-top:10px" class="pill">⭐ <span id="pointsLabel">0</span> <span data-i18n="hero.points">نقطة ولاء</span></div>
+        </div>
+        <img src="https://images.unsplash.com/photo-1586201375761-83865001e31b?q=80&w=1200&auto=format&fit=crop" alt="سوبر ماركت" style="width:100%; height:260px; object-fit:cover; border-radius:18px">
+      </div>
+    </section>
+
+    <section id="catalog">
+      <h2 data-i18n="catalog.title">المنتجات</h2>
+      <div class="controls">
+        <input id="search" class="input" placeholder="🔎 ابحث عن منتج" data-i18n-placeholder="catalog.searchPh" />
+        <select id="category">
+          <option value="all" selected data-i18n="catalog.all">كل الأقسام</option>
+        </select>
+        <button class="btn alt" id="resetFilters" data-i18n="catalog.reset">تصفيه جديدة</button>
+      </div>
+      <div class="chips" id="catChips"></div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="offers">
+      <h2>🔥 <span data-i18n="offers.title">عروض وخصومات</span></h2>
+      <div class="grid" id="offersGrid"></div>
+    </section>
+
+    <section id="bests">
+      <h2>🏆 <span data-i18n="bests.title">الأكثر مبيعاً</span></h2>
+      <div class="grid" id="bestsGrid"></div>
+    </section>
+
+    <section id="new">
+      <h2>🆕 <span data-i18n="new.title">المنتجات الجديدة</span></h2>
+      <div class="grid" id="newGrid"></div>
+    </section>
+
+    <section id="loyalty">
+      <h2>💚 <span data-i18n="loyalty.title">برنامج الولاء</span></h2>
+      <div class="loyalty">
+        <div class="tier">
+          <h3 data-i18n="loyalty.how">شلون تجمع نقاط؟</h3>
+          <p data-i18n="loyalty.desc">كل 1,000 دينار = 1 نقطة. توصّل لـ 100 نقطة تاخذ خصم 5%، و250 نقطة خصم 10%.</p>
+          <div class="pill">⭐ <b id="pointsLabel2">0</b> <span data-i18n="loyalty.points">نقطة حالياً</span></div>
+        </div>
+        <div class="tier">
+          <h3 data-i18n="loyalty.tiers">الدرجات</h3>
+          <ul>
+            <li><b data-i18n="loyalty.bronze">برونزي</b>: 0–99 نقطة</li>
+            <li><b data-i18n="loyalty.silver">فضي</b>: 100–249 نقطة (خصم 5%)</li>
+            <li><b data-i18n="loyalty.gold">ذهبي</b>: 250+ نقطة (خصم 10%)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="about">
+      <div>
+        <h2 data-i18n="about.title">من نحن</h2>
+        <p data-i18n="about.text">سوبر ماركت محلي يقدّم أفضل المنتجات بأسعار مناسبة. نوفّر أقسام متنوعة وتوصيل سريع داخل المنطقة.</p>
+        <div class="pill">⏰ <span data-i18n="about.hours">ساعات العمل: يومياً 9 صباحاً – 11 مساءً</span></div>
+      </div>
+      <div>
+        <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=1200&auto=format&fit=crop" alt="داخل المتجر" style="width:100%; height:260px; object-fit:cover; border-radius:16px">
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div>
+        <h2 data-i18n="contact.title">اتصل بنا</h2>
+        <div class="grid" style="grid-template-columns:1fr 1fr; gap:8px">
+          <input class="input" id="custName" placeholder="اسمك" data-i18n-placeholder="contact.name" />
+          <input class="input" id="custPhone" placeholder="هاتف" data-i18n-placeholder="contact.phone" />
+        </div>
+        <div style="height:8px"></div>
+        <div class="actions">
+          <button class="btn" id="tgBtn">تلجرام</button>
+          <button class="btn alt" id="waBtn">واتساب</button>
+          <button class="btn warn" id="copyBtn" data-i18n="contact.copy">نسخ ملخص الطلب</button>
+        </div>
+        <small style="color:var(--muted)" data-i18n="contact.note">* رح نرسل الطلب كرسالة نصية جاهزة.</small>
+      </div>
+      <div>
+        <iframe class="map" id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.openstreetmap.org/export/embed.html?bbox=44.361%2C33.255%2C44.45%2C33.34&layer=mapnik&marker=33.303%2C44.39"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div style="display:flex; align-items:center; gap:10px; justify-content:space-between; flex-wrap:wrap">
+        <div>© <span id="year"></span> <b>متجرنا</b> — <span data-i18n="footer.rights">كل الحقوق محفوظة</span></div>
+        <div class="pill">💳 <span data-i18n="footer.payment">الدفع أونلاين قريباً</span></div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Floating Cart Button -->
+  <div class="cart-toggle">
+    <button class="fab" id="openCart">🧺<span id="cartCount" style="margin-inline-start:6px">0</span></button>
+  </div>
+
+  <!-- Drawer Cart -->
+  <div class="drawer" id="drawer">
+    <div class="backdrop" id="closeCart"></div>
+    <div class="panel">
+      <div style="display:flex; align-items:center; gap:10px">
+        <h3 style="margin:0" data-i18n="cart.title">سلة المشتريات</h3>
+        <span class="pill" id="cartItemsLabel">0 عنصر</span>
+        <div class="grow"></div>
+        <button class="btn alt" id="clearCart" data-i18n="cart.clear">تفريغ</button>
+      </div>
+      <div id="cartList" style="overflow:auto; max-height:60vh"></div>
+      <div class="cart-summary">
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <div data-i18n="cart.subtotal">المجموع الفرعي</div>
+          <div><b id="subtotal">0</b> <span data-i18n="currency">دينار</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center">
+          <div data-i18n="cart.discount">خصم الولاء</div>
+          <div><b id="loyaltyDiscount">0</b> <span data-i18n="currency">دينار</span></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; font-size:20px; font-weight:900">
+          <div data-i18n="cart.total">الإجمالي</div>
+          <div><b id="total">0</b> <span data-i18n="currency">دينار</span></div>
+        </div>
+        <div class="checkout">
+          <small style="color:var(--muted)" data-i18n="cart.note">* رح تنحسب نقاط الولاء بعد إتمام الطلب.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">تمت الإضافة للسلة ✅</div>
+
+  <script>
+    // ====== إعدادات قابلة للتعديل ======
+    const SHOP_NAME = 'متجرنا';
+    const TELEGRAM_USERNAME = 'YourTelegramUsername'; // مثال: MyMarketBot او اسم حسابك
+    const WHATSAPP_NUMBER = '9647000000000'; // رقم واتساب مع رمز البلد بدون +
+    const CURRENCY = 'دينار';
+
+    // ====== بيانات المنتجات (أمثلة) ======
+    const products = [
+      // الغذائية
+      {id:'r1', name:'رز بسمتي 5كغ', enName:'Basmati Rice 5kg', category:'الغذائية', price:18000, oldPrice:20000, img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1200&auto=format&fit=crop', desc:'رز بسمتي طويل الحبة.', best:true, isNew:false},
+      {id:'o1', name:'زيت طبخ 1لتر', enName:'Cooking Oil 1L', category:'الغذائية', price:3500, img:'https://images.unsplash.com/photo-1505575972945-40c92939c1f3?q=80&w=1200&auto=format&fit=crop', desc:'زيت نباتي نقي.', best:false, isNew:true},
+      {id:'s1', name:'سكر 2كغ', enName:'Sugar 2kg', category:'الغذائية', price:2500, img:'https://images.unsplash.com/photo-1517686469429-8bdb88b9f907?q=80&w=1200&auto=format&fit=crop', desc:'سكر أبيض ناعم.', best:false, isNew:false},
+
+      // اللحوم
+      {id:'m1', name:'لحم غنم طازج / كغ', enName:'Fresh Lamb / kg', category:'اللحوم', price:24000, img:'https://images.unsplash.com/photo-1551024506-0bccd828d307?q=80&w=1200&auto=format&fit=crop', desc:'لحم طازج يومي.', best:true, isNew:false},
+      {id:'m2', name:'دجاج كامل', enName:'Whole Chicken', category:'اللحوم', price:6000, img:'https://images.unsplash.com/photo-1514511547093-34c3c234224a?q=80&w=1200&auto=format&fit=crop', desc:'مبرد، وزن تقريبي 1.2كغ.', best:false, isNew:true},
+
+      // المعلبات
+      {id:'c1', name:'تونة بالماء', enName:'Tuna in Water', category:'المعلبات', price:2000, oldPrice:2500, img:'https://images.unsplash.com/photo-1586201375761-83865001e31b?q=80&w=1200&auto=format&fit=crop', desc:'علبة 160غ.', best:true, isNew:false},
+      {id:'c2', name:'معجون طماطة 800غ', enName:'Tomato Paste 800g', category:'المعلبات', price:3000, img:'https://images.unsplash.com/photo-1604908554027-813fa6a3c1f3?q=80&w=1200&auto=format&fit=crop', desc:'طبيعي بدون مواد حافظة.', best:false, isNew:false},
+
+      // المشروبات
+      {id:'d1', name:'ماء 1.5لتر', enName:'Water 1.5L', category:'المشروبات', price:500, img:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=1200&auto=format&fit=crop', desc:'مياه نقية.', best:false, isNew:false},
+      {id:'d2', name:'عصير برتقال 1لتر', enName:'Orange Juice 1L', category:'المشروبات', price:2500, img:'https://images.unsplash.com/photo-1571070284691-6a39a6f6c19a?q=80&w=1200&auto=format&fit=crop', desc:'بدون سكر مضاف.', best:true, isNew:true},
+
+      // الحلويات
+      {id:'sw1', name:'شوكولاتة داكنة', enName:'Dark Chocolate', category:'الحلويات', price:3000, img:'https://images.unsplash.com/photo-1548907040-4baa42d109fa?q=80&w=1200&auto=format&fit=crop', desc:'كاكاو 70%.', best:false, isNew:true},
+      {id:'sw2', name:'بسكويت سادة', enName:'Plain Biscuits', category:'الحلويات', price:1500, img:'https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?q=80&w=1200&auto=format&fit=crop', desc:'مقرمش ولذيذ.', best:false, isNew:false},
+    ];
+
+    // ====== i18n لغتين (مختصر) ======
+    const i18n = {
+      ar: {
+        'nav.catalog':'المنتجات','nav.offers':'العروض','nav.bests':'الأكثر مبيعاً','nav.new':'الجديد','nav.loyalty':'الولاء','nav.about':'من نحن','nav.contact':'اتصل بنا',
+        'hero.title':'أهلاً بيك بسوبر ماركت متجرنا','hero.subtitle':'تسوق أقسامنا المتنوعة، أضف للسلة، وارسِل طلبك مباشرة عبر تيلجرام أو واتساب.','hero.shopNow':'ابدأ التسوق','hero.viewOffers':'شوف العروض','hero.points':'نقطة ولاء',
+        'catalog.title':'المنتجات','catalog.searchPh':'🔎 ابحث عن منتج','catalog.all':'كل الأقسام','catalog.reset':'تصفيه جديدة',
+        'offers.title':'عروض وخصومات','bests.title':'الأكثر مبيعاً','new.title':'المنتجات الجديدة',
+        'loyalty.title':'برنامج الولاء','loyalty.how':'شلون تجمع نقاط؟','loyalty.desc':'كل 1,000 دينار = 1 نقطة. توصّل لـ 100 نقطة تاخذ خصم 5%، و250 نقطة خصم 10%.','loyalty.points':'نقطة حالياً','loyalty.tiers':'الدرجات','loyalty.bronze':'برونزي','loyalty.silver':'فضي','loyalty.gold':'ذهبي',
+        'about.title':'من نحن','about.text':'سوبر ماركت محلي يقدّم أفضل المنتجات بأسعار مناسبة. نوفّر أقسام متنوعة وتوصيل سريع داخل المنطقة.','about.hours':'ساعات العمل: يومياً 9 صباحاً – 11 مساءً',
+        'contact.title':'اتصل بنا','contact.name':'اسمك','contact.phone':'هاتف','contact.copy':'نسخ ملخص الطلب','contact.note':'* رح نرسل الطلب كرسالة نصية جاهزة.',
+        'cart.title':'سلة المشتريات','cart.clear':'تفريغ','cart.subtotal':'المجموع الفرعي','cart.discount':'خصم الولاء','cart.total':'الإجمالي','cart.note':'* رح تنحسب نقاط الولاء بعد إتمام الطلب.',
+        'currency':'دينار'
+      },
+      en: {
+        'nav.catalog':'Catalog','nav.offers':'Offers','nav.bests':'Best Sellers','nav.new':'New','nav.loyalty':'Loyalty','nav.about':'About','nav.contact':'Contact',
+        'hero.title':'Welcome to Our Supermarket','hero.subtitle':'Browse categories, add to cart, and send your order via Telegram or WhatsApp.','hero.shopNow':'Shop Now','hero.viewOffers':'View Offers','hero.points':'loyalty points',
+        'catalog.title':'Products','catalog.searchPh':'🔎 Search for a product','catalog.all':'All categories','catalog.reset':'Reset filters',
+        'offers.title':'Offers & Discounts','bests.title':'Best Sellers','new.title':'New Arrivals',
+        'loyalty.title':'Loyalty Program','loyalty.how':'How to earn points?','loyalty.desc':'Every 1,000 IQD = 1 point. Get 5% off at 100 points and 10% off at 250 points.','loyalty.points':'points now','loyalty.tiers':'Tiers','loyalty.bronze':'Bronze','loyalty.silver':'Silver','loyalty.gold':'Gold',
+        'about.title':'About Us','about.text':'Local supermarket with great prices. Wide categories and fast delivery.','about.hours':'Working hours: Daily 9 AM – 11 PM',
+        'contact.title':'Contact Us','contact.name':'Your name','contact.phone':'Phone','contact.copy':'Copy order summary','contact.note':'* We will send the order as a ready message.',
+        'cart.title':'Shopping Cart','cart.clear':'Clear','cart.subtotal':'Subtotal','cart.discount':'Loyalty discount','cart.total':'Total','cart.note':'* Loyalty points will be added after checkout.',
+        'currency':'IQD'
+      }
+    };
+
+    let currentLang = 'ar';
+
+    function applyI18n(){
+      const dict = i18n[currentLang];
+      document.querySelectorAll('[data-i18n]').forEach(el=>{
+        const key = el.getAttribute('data-i18n');
+        if(dict[key]) el.textContent = dict[key];
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+        const key = el.getAttribute('data-i18n-placeholder');
+        if(dict[key]) el.setAttribute('placeholder', dict[key]);
+      });
+      document.querySelectorAll('[data-i18n=currency]').forEach(el=> el.textContent = dict['currency']);
+      document.getElementById('langBtn').textContent = currentLang==='ar' ? 'EN' : 'AR';
+      document.documentElement.dir = currentLang==='ar' ? 'rtl' : 'ltr';
+      document.documentElement.lang = currentLang;
+    }
+
+    // ====== أدوات مساعدة ======
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const fmt = n => n.toLocaleString('ar-IQ');
+
+    // ====== بناء الأقسام من البيانات ======
+    const categories = ['الغذائية','اللحوم','المعلبات','المشروبات','الحلويات'];
+
+    // تعبئة select والchips
+    function buildCategoryControls(){
+      const select = $('#category');
+      categories.forEach(cat=>{
+        const opt = document.createElement('option');
+        opt.value = cat; opt.textContent = cat; select.appendChild(opt);
+      });
+      const chips = $('#catChips'); chips.innerHTML = '';
+      const allChip = chipEl('كل الأقسام','all', true); chips.appendChild(allChip);
+      categories.forEach(cat=> chips.appendChild(chipEl(cat, cat)));
+    }
+    function chipEl(label, val, active=false){
+      const a = document.createElement('a');
+      a.href = '#'; a.className = 'chip' + (active?' active':''); a.textContent = label; a.dataset.value = val;
+      a.addEventListener('click', (e)=>{ e.preventDefault();
+        $$('#catChips .chip').forEach(c=>c.classList.remove('active')); a.classList.add('active');
+        if(val==='all'){ $('#category').value='all'; } else { $('#category').value=val; }
+        renderGrid();
+      });
+      return a;
+    }
+
+    // ====== سلة المشتريات ======
+    const CART_KEY = 'supermarket_cart_v1';
+    const POINTS_KEY = 'supermarket_points_v1';
+    let cart = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    let points = parseInt(localStorage.getItem(POINTS_KEY) || '0', 10);
+
+    function saveCart(){ localStorage.setItem(CART_KEY, JSON.stringify(cart)); }
+    function savePoints(){ localStorage.setItem(POINTS_KEY, points); }
+
+    function addToCart(p){
+      const found = cart.find(i=>i.id===p.id);
+      if(found) found.qty += 1; else cart.push({id:p.id, qty:1});
+      saveCart(); updateCartUI(); showToast('تمت الإضافة للسلة ✅');
+    }
+    function changeQty(id, d){
+      const item = cart.find(i=>i.id===id); if(!item) return;
+      item.qty += d; if(item.qty<=0) cart = cart.filter(i=>i.id!==id);
+      saveCart(); updateCartUI();
+    }
+    function clearCart(){ cart=[]; saveCart(); updateCartUI(); }
+
+    function cartItemsDetailed(){
+      return cart.map(i=> ({ ...i, product: products.find(p=>p.id===i.id) })).filter(x=>!!x.product);
+    }
+
+    function subtotal(){
+      return cartItemsDetailed().reduce((s, i)=> s + i.product.price * i.qty, 0);
+    }
+
+    function loyaltyDiscountFor(total){
+      // مستويات الخصم: 5% للـ 100+ نقطة، 10% للـ 250+
+      const tier = points>=250 ? 0.10 : points>=100 ? 0.05 : 0;
+      return Math.round(total * tier);
+    }
+
+    function updateCartUI(){
+      $('#cartCount').textContent = cart.reduce((s,i)=>s+i.qty,0);
+      $('#cartItemsLabel').textContent = cart.length + (currentLang==='ar' ? ' عنصر' : ' items');
+      const list = $('#cartList'); list.innerHTML='';
+      cartItemsDetailed().forEach(({id, qty, product})=>{
+        const row = document.createElement('div');
+        row.className='cart-row';
+        row.innerHTML = `
+          <img src="${product.img}" alt="${product.name}" />
+          <div>
+            <div class="name">${product.name}</div>
+            <div class="price">${fmt(product.price)} ${i18n[currentLang]['currency']}</div>
+          </div>
+          <div class="ctrls">
+            <button aria-label="-" onclick="changeQty('${id}',-1)">−</button>
+            <div style="min-width:28px; text-align:center">${qty}</div>
+            <button aria-label="+" onclick="changeQty('${id}',1)">+</button>
+          </div>
+        `;
+        list.appendChild(row);
+      });
+      const sub = subtotal();
+      const disc = loyaltyDiscountFor(sub);
+      const tot = Math.max(0, sub - disc);
+      $('#subtotal').textContent = fmt(sub);
+      $('#loyaltyDiscount').textContent = fmt(disc);
+      $('#total').textContent = fmt(tot);
+      // تحديث نقاط العرض
+      $('#pointsLabel').textContent = points;
+      $('#pointsLabel2').textContent = points;
+    }
+
+    // ====== بناء الكروت ======
+    function productCard(p){
+      const hasSale = p.oldPrice && p.oldPrice>p.price;
+      const card = document.createElement('div'); card.className='card';
+      card.innerHTML = `
+        ${p.isNew? '<div class="badge new">جديد</div>':''}
+        ${hasSale? '<div class="badge sale">خصم</div>':''}
+        <img src="${p.img}" alt="${p.name}">
+        <div class="card-body">
+          <div class="title">${p.name}</div>
+          <div class="desc">${p.desc||''}</div>
+          <div class="price">
+            <span>${fmt(p.price)} ${i18n[currentLang]['currency']}</span>
+            ${hasSale? `<span class="old">${fmt(p.oldPrice)} ${i18n[currentLang]['currency']}</span>`:''}
+          </div>
+          <div class="card-actions">
+            <button class="btn" onclick='addToCartById("${p.id}")'>+ أضف للسلة</button>
+            <div class="qty">
+              <button onclick='changeQty("${p.id}",-1)'>−</button>
+              <button onclick='changeQty("${p.id}",1)'>+</button>
+            </div>
+          </div>
+        </div>
+      `;
+      return card;
+    }
+    function addToCartById(id){ const p = products.find(x=>x.id===id); if(p) addToCart(p); }
+
+    function renderGrid(){
+      const q = $('#search').value.trim().toLowerCase();
+      const sel = $('#category').value;
+      const list = products.filter(p=> (sel==='all' || p.category===sel) && (
+        p.name.toLowerCase().includes(q) || (p.enName||'').toLowerCase().includes(q)
+      ));
+      const grid = $('#grid'); grid.innerHTML='';
+      list.forEach(p=> grid.appendChild(productCard(p)));
+    }
+
+    function renderSpecialGrids(){
+      const offers = products.filter(p=> p.oldPrice && p.oldPrice>p.price);
+      const bests = products.filter(p=> p.best);
+      const news = products.filter(p=> p.isNew);
+      const og = $('#offersGrid'); const bg=$('#bestsGrid'); const ng=$('#newGrid');
+      og.innerHTML=''; bg.innerHTML=''; ng.innerHTML='';
+      offers.forEach(p=> og.appendChild(productCard(p)));
+      bests.forEach(p=> bg.appendChild(productCard(p)));
+      news.forEach(p=> ng.appendChild(productCard(p)));
+    }
+
+    // ====== إرسال الطلب ======
+    function buildOrderSummary(){
+      const items = cartItemsDetailed();
+      if(items.length===0) return currentLang==='ar' ? 'السلة فارغة' : 'Cart is empty';
+      const lines = items.map(i=> `- ${i.product.name} × ${i.qty} = ${fmt(i.product.price*i.qty)} ${i18n[currentLang]['currency']}`);
+      const sub = subtotal(); const disc = loyaltyDiscountFor(sub); const tot = Math.max(0, sub-disc);
+      const name = $('#custName').value||'-';
+      const phone = $('#custPhone').value||'-';
+      const txt = [
+        `🛒 ${SHOP_NAME}`,
+        '— — —',
+        ...lines,
+        '— — —',
+        `${currentLang==='ar'?'المجموع الفرعي':'Subtotal'}: ${fmt(sub)} ${i18n[currentLang]['currency']}`,
+        `${currentLang==='ar'?'خصم الولاء':'Loyalty discount'}: ${fmt(disc)} ${i18n[currentLang]['currency']}`,
+        `${currentLang==='ar'?'الإجمالي':'Total'}: ${fmt(tot)} ${i18n[currentLang]['currency']}`,
+        '— — —',
+        `${currentLang==='ar'?'الاسم':'Name'}: ${name}`,
+        `${currentLang==='ar'?'الهاتف':'Phone'}: ${phone}`
+      ].join('\n');
+      return txt;
+    }
+
+    function sendTelegram(){
+      const text = encodeURIComponent(buildOrderSummary());
+      // مشاركة عامة (يفتح اختيار المحادثة) أو توجيه لحسابك/بوتك
+      const url = TELEGRAM_USERNAME
+        ? `https://t.me/${TELEGRAM_USERNAME}?start=order&text=${text}`
+        : `https://t.me/share/url?text=${text}`;
+      window.open(url, '_blank');
+      afterCheckout();
+    }
+    function sendWhatsApp(){
+      const text = encodeURIComponent(buildOrderSummary());
+      const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${text}`;
+      window.open(url, '_blank');
+      afterCheckout();
+    }
+    function copySummary(){
+      const text = buildOrderSummary();
+      navigator.clipboard.writeText(text).then(()=> showToast(currentLang==='ar'?'اننسخت ✅':'Copied ✅'));
+    }
+
+    function afterCheckout(){
+      // إضافة نقاط الولاء: 1 نقطة لكل 1000 دينار من الإجمالي
+      const sub = subtotal(); const disc = loyaltyDiscountFor(sub); const tot = Math.max(0, sub-disc);
+      const earned = Math.floor(tot / 1000);
+      points += earned; savePoints(); updateCartUI();
+      clearCart();
+    }
+
+    // ====== توست بسيط ======
+    let toastTimer; function showToast(msg){
+      const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(()=> t.classList.remove('show'), 1600);
+    }
+
+    // ====== أحداث واجهة المستخدم ======
+    $('#openCart').addEventListener('click', ()=> $('#drawer').classList.add('show'));
+    $('#closeCart').addEventListener('click', ()=> $('#drawer').classList.remove('show'));
+    $('#clearCart').addEventListener('click', clearCart);
+    $('#search').addEventListener('input', renderGrid);
+    $('#category').addEventListener('change', ()=>{ $$('#catChips .chip').forEach(c=> c.classList.toggle('active', c.dataset.value===($('#category').value==='all'?'all':$('#category').value))); renderGrid(); });
+    $('#resetFilters').addEventListener('click', ()=>{ $('#search').value=''; $('#category').value='all'; $$('#catChips .chip').forEach((c,i)=> c.classList.toggle('active', i===0)); renderGrid(); window.location.hash='#catalog'; });
+
+    $('#tgBtn').addEventListener('click', sendTelegram);
+    $('#waBtn').addEventListener('click', sendWhatsApp);
+    $('#copyBtn').addEventListener('click', copySummary);
+
+    $('#langBtn').addEventListener('click', ()=>{ currentLang = currentLang==='ar'?'en':'ar'; applyI18n(); renderGrid(); renderSpecialGrids(); updateCartUI(); });
+
+    // سنة الفوتر
+    $('#year').textContent = new Date().getFullYear();
+
+    // ====== تهيئة الصفحة ======
+    buildCategoryControls();
+    applyI18n();
+    renderGrid();
+    renderSpecialGrids();
+    updateCartUI();
+
+    // API Viewer (مثال بسيط: سعر الصرف) — قابل للإزالة
+    // fetch('https://api.exchangerate.host/latest?base=USD&symbols=IQD').then(r=>r.json()).then(d=>{
+    //   console.log('USD→IQD', d);
+    // });
+  </script>
+</body>
+</html>
